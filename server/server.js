@@ -18,21 +18,20 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('new user Connected');
 
-socket.emit('newMsg', {
-  from:"sijosam",
-  text:"Example",
-  createAt:"123"
-});
+       socket.on('createMsg', (newMsg) => {
+        console.log('createMsg', newMsg);
+        io.emit('newMsg', {
+          from:newMsg.from,
+          text:newMsg.text,
+          createdAt: new Date().getTime()
+        });
+      });
 
-socket.on('createMsg', (newMsg) => {
-  console.log('createMsg', newMsg);
-})
+          socket.on('disconnect', (socket) => {
+          console.log('client has leaved');
+           });
 
-  socket.on('disconnect', (socket) => {
-  console.log('client has leaved');
-});
-
-});
+      });
 
 server.listen(port, () => {
   console.log('Started the Server');
